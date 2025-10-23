@@ -1,0 +1,145 @@
+---
+layout: ../../layouts/BlogPost.astro
+title: "La Méthode des 5 Pourquoi"
+description: "Découvrez comment la technique des 5 Pourquoi permet d'identifier la cause racine d'un problème avec des exemples concrets."
+pubDate: 2024-01-20
+---
+
+La **méthode des 5 Pourquoi** est une technique d'analyse des causes racines développée par Sakichi Toyoda, fondateur de Toyota. C'est un outil simple mais puissant pour identifier la véritable origine d'un problème.
+
+## Principe de la méthode
+
+L'idée est simple : face à un problème, demandez "Pourquoi ?" cinq fois (ou plus si nécessaire) pour creuser au-delà des symptômes apparents et découvrir la cause fondamentale.
+
+### Pourquoi 5 fois ?
+
+Le chiffre 5 n'est pas magique. C'est une règle empirique qui suggère qu'il faut généralement poser la question environ cinq fois pour atteindre la cause racine. Parfois, 3 fois suffisent, d'autres fois vous aurez besoin de 7 ou 8 itérations.
+
+## Exemple 1 : Problème de production
+
+**Problème initial :** Une machine s'est arrêtée.
+
+1. **Pourquoi la machine s'est-elle arrêtée ?**
+   - Parce qu'il y a eu une surcharge et le fusible a sauté.
+
+2. **Pourquoi y a-t-il eu une surcharge ?**
+   - Parce que le roulement n'était pas suffisamment lubrifié.
+
+3. **Pourquoi n'était-il pas suffisamment lubrifié ?**
+   - Parce que la pompe de lubrification ne pompait pas assez.
+
+4. **Pourquoi la pompe ne pompait-elle pas assez ?**
+   - Parce que l'arbre de la pompe était usé et vibrait.
+
+5. **Pourquoi l'arbre était-il usé ?**
+   - Parce qu'il n'y avait pas de filtre et des copeaux métalliques sont entrés.
+
+**Cause racine :** Absence de filtre permettant l'entrée de copeaux métalliques.
+
+**Solution :** Installer un filtre et établir un programme de maintenance préventive.
+
+## Exemple 2 : Problème logiciel
+
+**Problème initial :** L'application web crash régulièrement.
+
+1. **Pourquoi l'application crash-t-elle ?**
+   - Parce qu'elle manque de mémoire.
+
+2. **Pourquoi manque-t-elle de mémoire ?**
+   - Parce qu'il y a une fuite mémoire dans le code.
+
+3. **Pourquoi y a-t-il une fuite mémoire ?**
+   - Parce que les connexions à la base de données ne sont pas fermées correctement.
+
+4. **Pourquoi les connexions ne sont-elles pas fermées ?**
+   - Parce que le code ne gère pas les exceptions correctement.
+
+5. **Pourquoi les exceptions ne sont-elles pas gérées ?**
+   - Parce qu'il n'y a pas de guidelines claires sur la gestion des erreurs et pas de revue de code systématique.
+
+**Cause racine :** Manque de processus de développement et de revue de code.
+
+**Solution :** 
+- Mettre en place des guidelines de développement
+- Instaurer des revues de code obligatoires
+- Ajouter des tests automatisés pour détecter les fuites mémoire
+
+## Avantages de la méthode
+
+### 1. Simplicité
+Pas besoin d'outils sophistiqués ou de formation complexe. N'importe qui peut utiliser cette technique.
+
+### 2. Profondeur d'analyse
+Elle force à aller au-delà des symptômes superficiels pour trouver la vraie cause.
+
+### 3. Prévention
+En identifiant la cause racine, on peut mettre en place des solutions durables plutôt que de simples correctifs temporaires.
+
+### 4. Collaborative
+Cette méthode fonctionne bien en équipe, favorisant la discussion et la compréhension partagée.
+
+## Pièges à éviter
+
+### 1. S'arrêter trop tôt
+Ne vous contentez pas des premières réponses. Continuez à creuser jusqu'à la vraie cause racine.
+
+### 2. Blâmer les individus
+Concentrez-vous sur les processus et les systèmes, pas sur les personnes. Le but est d'améliorer, pas de punir.
+
+### 3. Accepter des réponses vagues
+Chaque "pourquoi" doit avoir une réponse concrète et vérifiable.
+
+### 4. Suivre une seule piste
+Parfois, il y a plusieurs causes racines. Soyez prêt à explorer différentes branches.
+
+## Comment l'appliquer efficacement
+
+1. **Définir clairement le problème** - Soyez spécifique sur ce qui ne va pas.
+
+2. **Rassembler les faits** - Basez-vous sur des données réelles, pas sur des suppositions.
+
+3. **Poser les questions** - Demandez "pourquoi" de manière méthodique.
+
+4. **Documenter le processus** - Écrivez chaque étape pour garder une trace de votre raisonnement.
+
+5. **Vérifier la logique** - Assurez-vous que chaque lien de causalité est valide.
+
+6. **Agir sur la cause racine** - Mettez en place des solutions qui adressent le problème fondamental.
+
+## Exemple pratique : Retard de projet
+
+**Problème :** Le projet a été livré avec 2 semaines de retard.
+
+1. **Pourquoi le projet était-il en retard ?**
+   - Parce que la phase de tests a pris plus de temps que prévu.
+
+2. **Pourquoi les tests ont-ils pris plus de temps ?**
+   - Parce que beaucoup de bugs ont été découverts tardivement.
+
+3. **Pourquoi les bugs ont-ils été découverts tardivement ?**
+   - Parce qu'il n'y avait pas de tests pendant le développement.
+
+4. **Pourquoi n'y avait-il pas de tests pendant le développement ?**
+   - Parce que les développeurs n'avaient pas le temps de faire des tests unitaires.
+
+5. **Pourquoi n'avaient-ils pas le temps ?**
+   - Parce que les estimations initiales ne prenaient pas en compte le temps nécessaire pour les tests.
+
+**Cause racine :** Processus d'estimation inadéquat qui ne considère pas toutes les phases du développement.
+
+**Solutions :**
+- Réviser le processus d'estimation pour inclure tous les aspects du développement
+- Former l'équipe aux bonnes pratiques de test
+- Intégrer les tests dès le début du développement (TDD)
+- Mettre en place des reviews d'estimation par des pairs
+
+## Conclusion
+
+La méthode des 5 Pourquoi est un outil puissant et accessible pour l'analyse des causes racines. En l'appliquant systématiquement, vous pouvez transformer votre approche de la résolution de problèmes et mettre en place des solutions durables plutôt que de simples pansements temporaires.
+
+**Points clés à retenir :**
+- Posez "pourquoi" au moins 5 fois
+- Creusez au-delà des symptômes
+- Concentrez-vous sur les processus, pas les personnes
+- Documentez votre analyse
+- Agissez sur la cause racine identifiée

@@ -1,0 +1,400 @@
+---
+layout: ../../layouts/BlogPost.astro
+title: "Problem Solving en Programmation : Approches et Exemples"
+description: "Découvrez les meilleures pratiques et méthodologies pour résoudre efficacement des problèmes de programmation avec des exemples concrets."
+pubDate: 2024-02-01
+---
+
+Le **problem solving en programmation** est au cœur du métier de développeur. Chaque jour, nous sommes confrontés à des défis techniques qui nécessitent une approche méthodique et créative. Explorons les stratégies et techniques qui font la différence.
+
+## Les types de problèmes en programmation
+
+### 1. Bugs et erreurs
+Problèmes dans le code existant qui causent des comportements inattendus.
+
+### 2. Problèmes de performance
+Le code fonctionne mais est trop lent ou consomme trop de ressources.
+
+### 3. Problèmes d'architecture
+Comment structurer le code pour qu'il soit maintenable et évolutif.
+
+### 4. Problèmes algorithmiques
+Trouver la meilleure approche pour résoudre un défi computationnel.
+
+## L'approche méthodique : IDEAL
+
+Le modèle **IDEAL** est particulièrement adapté à la résolution de problèmes en programmation :
+
+### I - Identifier le problème
+Définissez clairement ce qui ne fonctionne pas. Posez-vous les questions :
+- Quel est le comportement attendu ?
+- Quel est le comportement actuel ?
+- Dans quelles conditions le problème apparaît-il ?
+
+### D - Définir l'objectif
+Que voulez-vous accomplir exactement ? Soyez spécifique et mesurable.
+
+### E - Explorer les stratégies
+Quelles sont les différentes approches possibles ? Ne vous précipitez pas sur la première solution.
+
+### A - Anticiper les résultats
+Quelle solution semble la plus prometteuse ? Quels sont les risques ?
+
+### L - Look back (Rétrospective)
+La solution fonctionne-t-elle ? Qu'avez-vous appris ?
+
+## Exemple 1 : Debug d'une fuite mémoire
+
+**Problème :** Une application Node.js consomme de plus en plus de mémoire jusqu'au crash.
+
+### Identification
+```javascript
+// Observation : La mémoire augmente constamment
+// Symptômes : Crash après plusieurs heures d'utilisation
+// Contexte : Application Express avec connexion MongoDB
+```
+
+### Stratégie de debug
+1. **Utiliser les outils de profiling**
+```bash
+node --inspect app.js
+# Utiliser Chrome DevTools pour analyser les heap snapshots
+```
+
+2. **Analyser les heap dumps**
+```javascript
+const heapdump = require('heapdump');
+// Prendre des snapshots à différents moments
+```
+
+3. **Identifier les coupables**
+```javascript
+// Problème trouvé : event listeners non nettoyés
+eventEmitter.on('data', handler); // Jamais de removeListener()
+```
+
+### Solution
+```javascript
+// Avant (problématique)
+function processData() {
+  eventEmitter.on('data', (data) => {
+    handleData(data);
+  });
+}
+
+// Après (corrigé)
+function processData() {
+  const handler = (data) => handleData(data);
+  eventEmitter.once('data', handler); // Utiliser 'once'
+  // OU
+  // eventEmitter.on('data', handler);
+  // ... et plus tard
+  // eventEmitter.removeListener('data', handler);
+}
+```
+
+### Apprentissage
+- Toujours nettoyer les ressources (event listeners, timers, connexions)
+- Utiliser `once` au lieu de `on` quand approprié
+- Implémenter un monitoring de la mémoire en production
+
+## Exemple 2 : Optimisation d'algorithme
+
+**Problème :** Fonction de recherche trop lente sur de grandes collections.
+
+### Code initial (O(n))
+```javascript
+function findUser(users, targetId) {
+  for (let user of users) {
+    if (user.id === targetId) {
+      return user;
+    }
+  }
+  return null;
+}
+// Temps : ~500ms pour 1 million d'utilisateurs
+```
+
+### Analyse
+- Complexité linéaire O(n)
+- Pas de structure de données optimisée
+- Recherche séquentielle inefficace
+
+### Solution 1 : Map/Object pour accès O(1)
+```javascript
+// Prétraitement
+const userMap = new Map(users.map(u => [u.id, u]));
+
+function findUser(userMap, targetId) {
+  return userMap.get(targetId) || null;
+}
+// Temps : ~0.1ms pour 1 million d'utilisateurs
+```
+
+### Solution 2 : Index de base de données
+```javascript
+// En MongoDB
+db.users.createIndex({ id: 1 });
+
+// En SQL
+CREATE INDEX idx_user_id ON users(id);
+
+// La recherche est maintenant O(log n) avec l'index
+```
+
+### Résultat
+- Performance améliorée de 5000x
+- Trade-off : Plus de mémoire pour le Map
+- Solution scalable pour de grandes quantités de données
+
+## Exemple 3 : Résolution d'un problème d'architecture
+
+**Problème :** Code spaghetti difficile à maintenir et tester.
+
+### Situation initiale
+```javascript
+// Tout dans une seule fonction
+async function processOrder(orderId) {
+  // Validation
+  if (!orderId) throw new Error('Invalid order');
+  
+  // Récupération données
+  const order = await db.orders.findOne({ id: orderId });
+  const user = await db.users.findOne({ id: order.userId });
+  const products = await db.products.find({ 
+    id: { $in: order.productIds } 
+  });
+  
+  // Calculs
+  let total = 0;
+  for (let product of products) {
+    total += product.price * product.quantity;
+  }
+  
+  // Vérification stock
+  for (let product of products) {
+    if (product.stock < product.quantity) {
+      throw new Error('Insufficient stock');
+    }
+  }
+  
+  // Paiement
+  const payment = await stripeAPI.charge({
+    amount: total,
+    customer: user.stripeId
+  });
+  
+  // Mise à jour stock
+  for (let product of products) {
+    await db.products.updateOne(
+      { id: product.id },
+      { $inc: { stock: -product.quantity } }
+    );
+  }
+  
+  // Email
+  await sendEmail(user.email, 'Order confirmation', ...);
+  
+  return { success: true, orderId };
+}
+```
+
+### Problèmes identifiés
+- Fonction trop longue et complexe
+- Responsabilités multiples
+- Difficile à tester
+- Couplage fort avec les dépendances externes
+
+### Refactoring avec séparation des responsabilités
+
+```javascript
+// Services séparés
+class OrderValidator {
+  validate(orderId) {
+    if (!orderId) throw new Error('Invalid order');
+    return true;
+  }
+}
+
+class OrderRepository {
+  async getOrder(orderId) {
+    return await db.orders.findOne({ id: orderId });
+  }
+  
+  async getOrderDetails(order) {
+    const user = await db.users.findOne({ id: order.userId });
+    const products = await db.products.find({ 
+      id: { $in: order.productIds } 
+    });
+    return { user, products };
+  }
+}
+
+class PriceCalculator {
+  calculateTotal(products) {
+    return products.reduce((sum, p) => sum + p.price * p.quantity, 0);
+  }
+}
+
+class InventoryService {
+  checkStock(products) {
+    const insufficientStock = products.find(p => p.stock < p.quantity);
+    if (insufficientStock) {
+      throw new Error(`Insufficient stock for ${insufficientStock.name}`);
+    }
+  }
+  
+  async updateStock(products) {
+    const updates = products.map(product =>
+      db.products.updateOne(
+        { id: product.id },
+        { $inc: { stock: -product.quantity } }
+      )
+    );
+    await Promise.all(updates);
+  }
+}
+
+class PaymentService {
+  async processPayment(amount, user) {
+    return await stripeAPI.charge({
+      amount,
+      customer: user.stripeId
+    });
+  }
+}
+
+class NotificationService {
+  async sendOrderConfirmation(user, orderId) {
+    await sendEmail(user.email, 'Order confirmation', { orderId });
+  }
+}
+
+// Orchestrateur principal
+class OrderProcessor {
+  constructor(dependencies) {
+    this.validator = dependencies.validator;
+    this.orderRepo = dependencies.orderRepo;
+    this.priceCalculator = dependencies.priceCalculator;
+    this.inventory = dependencies.inventory;
+    this.payment = dependencies.payment;
+    this.notification = dependencies.notification;
+  }
+  
+  async processOrder(orderId) {
+    // 1. Validation
+    this.validator.validate(orderId);
+    
+    // 2. Récupération données
+    const order = await this.orderRepo.getOrder(orderId);
+    const { user, products } = await this.orderRepo.getOrderDetails(order);
+    
+    // 3. Calculs
+    const total = this.priceCalculator.calculateTotal(products);
+    
+    // 4. Vérification stock
+    this.inventory.checkStock(products);
+    
+    // 5. Paiement
+    await this.payment.processPayment(total, user);
+    
+    // 6. Mise à jour stock
+    await this.inventory.updateStock(products);
+    
+    // 7. Notification
+    await this.notification.sendOrderConfirmation(user, orderId);
+    
+    return { success: true, orderId };
+  }
+}
+
+// Utilisation avec injection de dépendances
+const orderProcessor = new OrderProcessor({
+  validator: new OrderValidator(),
+  orderRepo: new OrderRepository(),
+  priceCalculator: new PriceCalculator(),
+  inventory: new InventoryService(),
+  payment: new PaymentService(),
+  notification: new NotificationService()
+});
+
+await orderProcessor.processOrder(orderId);
+```
+
+### Avantages de la refactorisation
+1. **Testabilité** : Chaque service peut être testé indépendamment
+2. **Réutilisabilité** : Les services peuvent être utilisés ailleurs
+3. **Maintenabilité** : Changements localisés, code plus lisible
+4. **Flexibilité** : Facile de remplacer une implémentation (mock pour tests)
+
+## Techniques générales de problem solving en code
+
+### 1. Rubber Duck Debugging
+Expliquez votre code à voix haute (à un canard en plastique si nécessaire). Souvent, le simple fait d'expliquer révèle le problème.
+
+### 2. Divide and Conquer
+Divisez le problème en sous-problèmes plus petits et résolvez-les un par un.
+
+### 3. Start Simple
+Commencez par la solution la plus simple, puis optimisez si nécessaire.
+
+### 4. Read the Error Messages
+Les messages d'erreur contiennent souvent la solution. Lisez-les attentivement.
+
+### 5. Check Your Assumptions
+Vérifiez que vos hypothèses sur le comportement du code sont correctes.
+
+### 6. Use Version Control Effectively
+```bash
+# Trouvez quand un bug a été introduit
+git bisect start
+git bisect bad HEAD
+git bisect good v1.0.0
+# Git teste automatiquement les commits
+```
+
+### 7. Write Tests First (TDD)
+```javascript
+// Test d'abord
+describe('calculateDiscount', () => {
+  it('should apply 10% discount for orders over 100', () => {
+    expect(calculateDiscount(150)).toBe(135);
+  });
+});
+
+// Puis implémentation
+function calculateDiscount(amount) {
+  return amount > 100 ? amount * 0.9 : amount;
+}
+```
+
+## Checklist du développeur problem solver
+
+✅ Ai-je bien compris le problème ?  
+✅ Ai-je reproduit le bug de manière fiable ?  
+✅ Ai-je consulté les logs et messages d'erreur ?  
+✅ Ai-je vérifié mes hypothèses ?  
+✅ Ai-je considéré plusieurs solutions ?  
+✅ Mon code est-il testable ?  
+✅ Ai-je écrit des tests pour prévenir la régression ?  
+✅ Le code est-il lisible et maintenable ?  
+✅ Ai-je documenté les décisions importantes ?  
+✅ Ai-je demandé une revue de code ?  
+
+## Conclusion
+
+Le problem solving en programmation est à la fois un art et une science. Il nécessite :
+- Une approche méthodique
+- Des outils appropriés
+- De la pratique régulière
+- Une curiosité constante
+- L'humilité d'apprendre de ses erreurs
+
+Chaque problème résolu vous rend meilleur. N'ayez pas peur des bugs - ils sont des opportunités d'apprentissage !
+
+**Points clés :**
+- Utilisez une méthode structurée (IDEAL)
+- Divisez les problèmes complexes
+- Refactorisez le code pour la maintenabilité
+- Testez systématiquement
+- Apprenez de chaque résolution

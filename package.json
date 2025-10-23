@@ -1,0 +1,28 @@
+{
+  "name": "problem-solving-blog",
+  "version": "1.0.0",
+  "description": "A blog exploring problem solving",
+  "type": "module",
+  "scripts": {
+    "dev": "astro dev",
+    "start": "astro dev",
+    "build": "astro check && astro build",
+    "preview": "astro preview",
+    "astro": "astro"
+  },
+  "keywords": [
+    "astro",
+    "blog",
+    "problem-solving"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "@astrojs/mdx": "^4.3.8",
+    "astro": "^5.15.1"
+  },
+  "devDependencies": {
+    "@astrojs/check": "^0.9.5",
+    "typescript": "^5.9.3"
+  }
+}

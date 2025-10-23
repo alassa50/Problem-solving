@@ -1,0 +1,113 @@
+---
+interface Props {
+	title: string;
+	description?: string;
+}
+
+const { title, description = 'Exploring problem solving through practical examples and insights' } = Astro.props;
+---
+
+<!doctype html>
+<html lang="fr">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="description" content={description} />
+		<meta name="viewport" content="width=device-width" />
+		<link rel="icon" type="image/svg+xml" href="/Problem-solving-/favicon.svg" />
+		<meta name="generator" content={Astro.generator} />
+		<title>{title}</title>
+		<style is:global>
+			:root {
+				--accent: #2563eb;
+				--accent-dark: #1e40af;
+				--black: 15, 18, 25;
+				--gray: 96, 115, 159;
+				--gray-light: 229, 233, 240;
+				--gray-dark: 34, 41, 57;
+				--gray-gradient: rgba(var(--gray-light), 50%), #fff;
+				--box-shadow: 0 2px 6px rgba(var(--gray), 25%), 0 8px 24px rgba(var(--gray), 33%),
+					0 16px 32px rgba(var(--gray), 33%);
+			}
+			* {
+				box-sizing: border-box;
+				margin: 0;
+			}
+			html {
+				font-family: system-ui, sans-serif;
+				font-size: 16px;
+				line-height: 1.6;
+				color: rgb(var(--gray-dark));
+			}
+			body {
+				margin: 0;
+				background: linear-gradient(var(--gray-gradient)) no-repeat;
+				background-size: 100% 600px;
+			}
+			main {
+				width: 100%;
+				max-width: 900px;
+				margin: 0 auto;
+				padding: 2rem 1rem;
+			}
+			h1, h2, h3, h4, h5, h6 {
+				margin: 0 0 1rem 0;
+				color: rgb(var(--black));
+				line-height: 1.2;
+			}
+			h1 {
+				font-size: 2.5rem;
+			}
+			h2 {
+				font-size: 2rem;
+			}
+			a {
+				color: var(--accent);
+				text-decoration: none;
+			}
+			a:hover {
+				color: var(--accent-dark);
+				text-decoration: underline;
+			}
+			p {
+				margin-bottom: 1rem;
+			}
+			.prose p {
+				margin-bottom: 1rem;
+			}
+			code {
+				background: #f4f4f4;
+				padding: 2px 4px;
+				border-radius: 3px;
+				font-family: 'Courier New', monospace;
+			}
+			pre {
+				background: #f4f4f4;
+				padding: 1rem;
+				border-radius: 5px;
+				overflow-x: auto;
+				margin-bottom: 1rem;
+			}
+			pre code {
+				background: none;
+				padding: 0;
+			}
+		</style>
+	</head>
+	<body>
+		<header>
+			<nav style="max-width: 900px; margin: 0 auto; padding: 2rem 1rem; border-bottom: 1px solid rgb(var(--gray-light));">
+				<a href="/Problem-solving-/" style="font-size: 1.5rem; font-weight: bold; color: rgb(var(--black));">Problem Solving Blog</a>
+				<div style="margin-top: 0.5rem;">
+					<a href="/Problem-solving-/" style="margin-right: 1rem;">Accueil</a>
+					<a href="/Problem-solving-/blog">Blog</a>
+				</div>
+			</nav>
+		</header>
+		<main>
+			<slot />
+		</main>
+		<footer style="text-align: center; padding: 2rem; border-top: 1px solid rgb(var(--gray-light)); margin-top: 4rem;">
+			<p>&copy; {new Date().getFullYear()} Problem Solving Blog. Tous droits réservés.</p>
+		</footer>
+	</body>
+</html>
