@@ -1,0 +1,51 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+const posts = import.meta.glob('./blog/*.mdx', { eager: true });
+const allPosts = Object.entries(posts).map(([path, post]: [string, any]) => {
+	// Extract filename from path
+	const filename = path.split('/').pop()?.replace('.mdx', '');
+	return {
+		url: `/Problem-solving-/blog/${filename}/`,
+		frontmatter: post.frontmatter
+	};
+});
+const sortedPosts = allPosts.sort((a: any, b: any) => {
+	const dateA = new Date(a.frontmatter.pubDate);
+	const dateB = new Date(b.frontmatter.pubDate);
+	return dateB.getTime() - dateA.getTime();
+});
+---
+
+<BaseLayout title="Blog - Problem Solving">
+	<h1>Articles de Blog</h1>
+	<p style="color: rgb(var(--gray)); margin-bottom: 2rem;">
+		Explorez nos articles sur la résolution de problèmes, les méthodologies et les exemples pratiques.
+	</p>
+	
+	<div style="display: flex; flex-direction: column; gap: 2rem;">
+		{sortedPosts.map((post) => {
+			const formattedDate = new Date(post.frontmatter.pubDate).toLocaleDateString('fr-FR', {
+				year: 'numeric',
+				month: 'long',
+				day: 'numeric',
+			});
+			return (
+				<article style="padding: 1.5rem; border: 1px solid rgb(var(--gray-light)); border-radius: 8px; transition: box-shadow 0.2s;">
+					<h2 style="margin-bottom: 0.5rem;">
+						<a href={post.url}>{post.frontmatter.title}</a>
+					</h2>
+					<p style="color: rgb(var(--gray)); font-size: 0.9rem; margin-bottom: 1rem;">
+						{formattedDate}
+					</p>
+					<p style="margin-bottom: 1rem;">
+						{post.frontmatter.description}
+					</p>
+					<a href={post.url} style="font-weight: bold;">
+						Lire la suite →
+					</a>
+				</article>
+			);
+		})}
+	</div>
+</BaseLayout>
